@@ -82,8 +82,11 @@ public class Methods {
         return preparedPlainText;
     }
 
+    /**
+     * remove dublicates from key to create Matrix
+     */
     String removeDuplicates(String key) {
-
+        key = key.replace(" ", "");
         // Create LinkedHashSet of type character
         LinkedHashSet<Character> set = new LinkedHashSet<>();
         // Add each character of the string into LinkedHashSet
@@ -98,7 +101,9 @@ public class Methods {
         return unique_key;
     }
 
-    // function to generate table
+    /**
+     * Generate matrix 5 x 5
+     */
     public char[][] generateCipherKey(String unique_key) {
         Set<Character> set = new HashSet<Character>();
         for (int i = 0; i < unique_key.length(); i++) {
@@ -162,27 +167,34 @@ public class Methods {
         /**
          * external for loop for taking pair of chars 2 by 2 .
          */
+        /**
+         * first char obj
+         */
+        char firstChar = ' ';
+        /**
+         * second char obj
+         */
+        char secondChar = ' ';
+        /**
+         * first char position
+         */
+        int[] firstCharPosition = new int[2];
+        /**
+         * second char position
+         */
+        int[] secondCharPosition = new int[2];
+        /**
+         * 2D array [row][column]
+         * Outer for loop is for Rows
+         */
+        char tempFirstChar=' ';
+        char tempSecondChar=' ';
         for (int i = 0; i < preparedPlainText.length(); i += 2) {
             /**
-             * first char obj
+             * initiate first and second char's
              */
-            char firstChar = preparedPlainTextInChars[i];
-            /**
-             * second char obj
-             */
-            char secondChar = preparedPlainTextInChars[i + 1];
-            /**
-             * first char position
-             */
-            int[] firstCharPosition = new int[2];
-            /**
-             * second char position
-             */
-            int[] secondCharPosition = new int[2];
-            /**
-             * 2D array [row][column]
-             * Outer for loop is for Rows
-             */
+            firstChar = preparedPlainTextInChars[i];
+            secondChar = preparedPlainTextInChars[i + 1];
             for (int x = 0; x < 5; x++) {
                 /**
                  * inner loop is for Columns
@@ -204,8 +216,6 @@ public class Methods {
                             firstCharPosition[0] = x;
                             firstCharPosition[1] = y;
                             counterFlag++;
-                            // System.out.println("first char position -> " +firstCharPosition[0]+"
-                            // "+firstCharPosition[1]);
                         }
                         /**
                          * if you find second char
@@ -217,27 +227,21 @@ public class Methods {
                             secondCharPosition[0] = x;
                             secondCharPosition[1] = y;
                             counterFlag++;
-                            // System.out.println("second char position -> " +secondCharPosition[0]+"
-                            // "+secondCharPosition[1]);
 
                         }
                     }
                 }
-                if (counterFlag == 2){
-                    System.out.println("columns and rows loop stopped");
+                if (counterFlag == 2) {
+                    // System.out.println("columns and rows loop stopped");
                     break;
                 }
-
 
             }
             /**
              * Encrypt both chars and add them to ciper Text
              * then get next 2 char's
              */
-            // ciperText += CiperdChars(firstCharPosition, secondCharPosition, matrix)[0];
-            // ciperText += CiperdChars(firstCharPosition, secondCharPosition, matrix)[1];
-            System.out.println("Cipered 2 chars -> " + CiperdChars(firstCharPosition, secondCharPosition, matrix)[0]
-                    + " " + CiperdChars(firstCharPosition, secondCharPosition, matrix)[1]);
+            ciperText+=CiperdChars(firstCharPosition, secondCharPosition, matrix);
             counterFlag = 0;
 
         }
@@ -248,38 +252,68 @@ public class Methods {
     /**
      * take 2 chars and convert it to 2 Cipered chars
      */
-    char[] CiperdChars(int[] firstCharPosition, int[] secondCharPosition, char[][] matrix) {
+    String CiperdChars(int[] firstCharPosition, int[] secondCharPosition, char[][] matrix) {
+        String returnedCiperedString="";
         char[] ciperdCharsArray = new char[2];
         int[] firstCiperedCharPosition = new int[2];
         int[] secondCiperedCharPosition = new int[2];
+        char firstOriginalChar = matrix[firstCharPosition[0]][firstCharPosition[1]];
+        char secondOriginalChar = matrix[secondCharPosition[0]][secondCharPosition[1]];
+        System.out.println();
+        System.out.println();
+        System.out.println("char's before encryption -> " + firstOriginalChar + " " + secondOriginalChar);
 
         /**
-         *
+         * if both are in the same row
          */
         if (firstCharPosition[0] == secondCharPosition[0]) {
+            System.out.println("********************* both are in the same row *******************");
             firstCiperedCharPosition[0] = firstCharPosition[0];
             secondCiperedCharPosition[0] = secondCharPosition[0];
-
             firstCiperedCharPosition[1] = (firstCharPosition[1] + 1) % 5;
             secondCiperedCharPosition[1] = (secondCharPosition[1] + 1) % 5;
 
             ciperdCharsArray[0] = matrix[firstCiperedCharPosition[0]][firstCiperedCharPosition[1]];
             ciperdCharsArray[1] = matrix[secondCiperedCharPosition[0]][secondCiperedCharPosition[1]];
-            return ciperdCharsArray;
-        } else if (firstCharPosition[1] == secondCharPosition[1]) {
+        } /**
+         * if both are in the same column
+         */
 
+        else if (firstCharPosition[1] == secondCharPosition[1]) {
+            System.out.println("****************** both are in the same column *******************");
             firstCiperedCharPosition[1] = firstCharPosition[1];
             secondCiperedCharPosition[1] = secondCharPosition[1];
-
             firstCiperedCharPosition[0] = (firstCharPosition[0] + 1) % 5;
             secondCiperedCharPosition[0] = (secondCharPosition[0] + 1) % 5;
+            ciperdCharsArray[0] = matrix[firstCiperedCharPosition[0]][firstCiperedCharPosition[1]];
+            ciperdCharsArray[1] = matrix[secondCiperedCharPosition[0]][secondCiperedCharPosition[1]];
 
-            return ciperdCharsArray;
-        } else {
+        } /**
+         * if not in the same row or in the same column .. apply x shape
+         */
+        else {
+            System.out.println("***************** not in the same row or column ***********************");
+            /**
+             * Rows will not change so we fixed it in this 2 lines
+             */
+            firstCiperedCharPosition[0] = firstCharPosition[0];
+            secondCiperedCharPosition[0] = secondCharPosition[0];
+            /**
+             * Swap Columns
+             */
+            firstCiperedCharPosition[1] = firstCharPosition[1];
+            secondCiperedCharPosition[1] = secondCharPosition[1];
             int temp = firstCiperedCharPosition[1];
             firstCiperedCharPosition[1] = secondCiperedCharPosition[1];
             secondCiperedCharPosition[1] = temp;
+            /**
+             * Assign new matrix valeus
+             */
+            ciperdCharsArray[0] = matrix[firstCiperedCharPosition[0]][firstCiperedCharPosition[1]];
+            ciperdCharsArray[1] = matrix[secondCiperedCharPosition[0]][secondCiperedCharPosition[1]];
         }
-        return ciperdCharsArray;
+        System.out.println("char's after encryption : " + ciperdCharsArray[0] + " " + ciperdCharsArray[1]);
+        returnedCiperedString=""+ciperdCharsArray[0]+ciperdCharsArray[1];
+        return returnedCiperedString;
     }
 }

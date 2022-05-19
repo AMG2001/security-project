@@ -2,6 +2,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-       new Methods().plainTextpreparing("asmaa asmaa");
+        new Methods().encryptePlainText("since by man", "we need million");
     }
 }
